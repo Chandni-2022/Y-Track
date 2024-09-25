@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import axios from 'axios';
 
@@ -25,7 +24,6 @@ const Signup = () => {
                 role 
             });
             alert(response.data.message);
-            
             setUsername('');
             setEmail('');
             setPassword('');
@@ -74,4 +72,12 @@ const Signup = () => {
     );
 };
 
-export default Signup;
+const App = () => {
+    return (
+        <div>
+            <Signup />
+        </div>
+    );
+};
+
+export default App;

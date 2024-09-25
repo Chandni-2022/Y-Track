@@ -1,0 +1,33 @@
+### Required
+
+    1. React Bootstrap and  Bootstrap CSS
+        # npm install react-bootstrap bootstrap
+            -> Add Bootstrap CSS in src/index.js:
+                import 'bootstrap/dist/css/bootstrap.min.css';
+
+    2. React Router DOM
+        # npm install react-router-dom
+
+    3. Font Awesome (Icons)
+        # npm install @fortawesome/react-fontawesome @fortawesome/free-solid-svg-icons @fortawesome/fontawesome-svg-core
+
+    4. Axios (HTTP Requests)
+        # npm install axios 
+
+    5. Socket.io (Real-Time Communication)
+        # npm install socket.io-client socket.io
+
+    6. React Toastify (Notifications)
+        # npm install react-toastify
+
+
+### Optional
+
+    * Redux ( Global State Management)
+        # npm install redux react-redux
+    
+    *  Recharts (Charts and Data Visualization)
+        # npm install recharts
+
+    * Moment.js (Date Handling)
+        # npm install moment
