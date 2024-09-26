@@ -1,5 +1,7 @@
 import React, { useState } from 'react';
 import axios from 'axios';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faUser, faEnvelope, faLock, faUserShield } from '@fortawesome/free-solid-svg-icons';
 
 const Signup = () => {
     const [username, setUsername] = useState('');
@@ -24,6 +26,7 @@ const Signup = () => {
                 role 
             });
             alert(response.data.message);
+            
             setUsername('');
             setEmail('');
             setPassword('');
@@ -36,48 +39,140 @@ const Signup = () => {
     };
 
     return (
-        <div className="container mt-5">
-            <div className="card shadow-lg" style={{ maxWidth: '500px', margin: 'auto' }}>
-                <div className="card-body">
-                    <h2 className="text-center mb-4">Signup</h2>
-                    <form onSubmit={handleSubmit}>
-                        <div className="mb-3">
-                            <label htmlFor="username" className="form-label">Username</label>
-                            <input type="text" className="form-control" id="username" value={username} onChange={(e) => setUsername(e.target.value)} required />
-                        </div>
-                        <div className="mb-3">
-                            <label htmlFor="email" className="form-label">Email</label>
-                            <input type="email" className="form-control" id="email" value={email} onChange={(e) => setEmail(e.target.value)} required />
-                        </div>
-                        <div className="mb-3">
-                            <label htmlFor="password" className="form-label">Password</label>
-                            <input type="password" className="form-control" id="password" value={password} onChange={(e) => setPassword(e.target.value)} required />
-                        </div>
-                        <div className="mb-3">
-                            <label htmlFor="confirmPassword" className="form-label">Confirm Password</label>
-                            <input type="password" className="form-control" id="confirmPassword" value={confirmPassword} onChange={(e) => setConfirmPassword(e.target.value)} required />
-                        </div>
-                        <div className="mb-3">
-                            <label htmlFor="role" className="form-label">Role</label>
-                            <select className="form-select" id="role" value={role} onChange={(e) => setRole(e.target.value)}>
-                                <option value="user">User</option>
-                                <option value="admin">Admin</option>
-                            </select>
-                        </div>
-                        <button type="submit" className="btn btn-primary w-100">Submit</button>
-                    </form>
-                </div>
+        <div style={{
+            minHeight: '100vh', 
+            backgroundImage: 'url("https://your-image-url-here.jpg")', // Replace with your background image URL
+            backgroundSize: 'cover', 
+            backgroundPosition: 'center', 
+            display: 'flex', 
+            justifyContent: 'center', 
+            alignItems: 'center', 
+            position: 'relative'
+        }}>
+            <div 
+                style={{ 
+                    maxWidth: '500px', 
+                    margin: 'auto', 
+                    borderRadius: '15px', 
+                    background: 'rgba(255, 255, 255, 0.9)', 
+                    boxShadow: '0 4px 20px rgba(0, 0, 0, 0.2)',
+                    backdropFilter: 'blur(10px)',
+                    padding: '20px',
+                    border: '1px solid #ff5722'
+                }}
+            >
+                <h2 className="text-center mb-4" style={{ color: '#00695c', fontWeight: 'bold' }}>Signup Page</h2>
+                <form onSubmit={handleSubmit}>
+                    <div className="mb-3 position-relative">
+                        <FontAwesomeIcon icon={faUser} style={{ position: 'absolute', top: '12px', left: '12px', color: '#ff5722' }} />
+                        <input 
+                            type="text" 
+                            style={{ 
+                                width: '100%', 
+                                padding: '12px 40px', 
+                                borderRadius: '10px', 
+                                border: '1px solid #ff5722', 
+                                transition: 'border-color 0.3s', 
+                                boxShadow: '0 2px 5px rgba(255, 87, 34, 0.2)' 
+                            }}
+                            value={username} 
+                            onChange={(e) => setUsername(e.target.value)} 
+                            placeholder="Username"
+                            required 
+                        />
+                    </div>
+                    <div className="mb-3 position-relative">
+                        <FontAwesomeIcon icon={faEnvelope} style={{ position: 'absolute', top: '12px', left: '12px', color: '#ff5722' }} />
+                        <input 
+                            type="email" 
+                            style={{ 
+                                width: '100%', 
+                                padding: '12px 40px', 
+                                borderRadius: '10px', 
+                                border: '1px solid #ff5722', 
+                                transition: 'border-color 0.3s', 
+                                boxShadow: '0 2px 5px rgba(255, 87, 34, 0.2)' 
+                            }}
+                            value={email} 
+                            onChange={(e) => setEmail(e.target.value)} 
+                            placeholder="Email"
+                            required 
+                        />
+                    </div>
+                    <div className="mb-3 position-relative">
+                        <FontAwesomeIcon icon={faLock} style={{ position: 'absolute', top: '12px', left: '12px', color: '#ff5722' }} />
+                        <input 
+                            type="password" 
+                            style={{ 
+                                width: '100%', 
+                                padding: '12px 40px', 
+                                borderRadius: '10px', 
+                                border: '1px solid #ff5722', 
+                                transition: 'border-color 0.3s', 
+                                boxShadow: '0 2px 5px rgba(255, 87, 34, 0.2)' 
+                            }}
+                            value={password} 
+                            onChange={(e) => setPassword(e.target.value)} 
+                            placeholder="Password"
+                            required 
+                        />
+                    </div>
+                    <div className="mb-3 position-relative">
+                        <FontAwesomeIcon icon={faLock} style={{ position: 'absolute', top: '12px', left: '12px', color: '#ff5722' }} />
+                        <input 
+                            type="password" 
+                            style={{ 
+                                width: '100%', 
+                                padding: '12px 40px', 
+                                borderRadius: '10px', 
+                                border: '1px solid #ff5722', 
+                                transition: 'border-color 0.3s', 
+                                boxShadow: '0 2px 5px rgba(255, 87, 34, 0.2)' 
+                            }}
+                            value={confirmPassword} 
+                            onChange={(e) => setConfirmPassword(e.target.value)} 
+                            placeholder="Confirm Password"
+                            required 
+                        />
+                    </div>
+                    <div className="mb-3">
+                        <label htmlFor="role" style={{ color: '#00695c', fontWeight: 'bold' }}>Select Your Role</label>
+                        <select 
+                            id="role" 
+                            value={role} 
+                            onChange={(e) => setRole(e.target.value)} 
+                            style={{ 
+                                width: '100%', 
+                                borderRadius: '10px', 
+                                border: '1px solid #ff5722', 
+                                padding: '10px'
+                            }}
+                        >
+                            <option value="user">User</option>
+                            <option value="admin">Admin</option>
+                        </select>
+                    </div>
+                    <button 
+                        type="submit" 
+                        style={{ 
+                            width: '100%', 
+                            borderRadius: '10px', 
+                            backgroundColor: '#ff5722', 
+                            color: '#fff', 
+                            border: 'none', 
+                            transition: 'background-color 0.3s',
+                            padding: '10px',
+                            fontWeight: 'bold'
+                        }} 
+                        onMouseEnter={(e) => e.target.style.backgroundColor = '#e64a19'} 
+                        onMouseLeave={(e) => e.target.style.backgroundColor = '#ff5722'}
+                    >
+                        Create Account
+                    </button>
+                </form>
             </div>
         </div>
     );
 };
 
-const App = () => {
-    return (
-        <div>
-            <Signup />
-        </div>
-    );
-};
-
-export default App;
+export default Signup;
