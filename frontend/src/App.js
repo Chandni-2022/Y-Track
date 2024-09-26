@@ -1,20 +1,22 @@
 import React, { useState } from 'react';
 import axios from 'axios';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faUser, faEnvelope, faLock, faUserShield } from '@fortawesome/free-solid-svg-icons';
+import { faUser, faEnvelope, faLock } from '@fortawesome/free-solid-svg-icons';
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 const Signup = () => {
     const [username, setUsername] = useState('');
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [confirmPassword, setConfirmPassword] = useState('');
-    const [role, setRole] = useState('user'); 
+    const [role, setRole] = useState('user');
 
     const handleSubmit = async (e) => {
         e.preventDefault();
 
         if (password !== confirmPassword) {
-            alert('Passwords do not match!');
+            toast.error('Passwords do not match!');
             return;
         }
 
@@ -25,8 +27,7 @@ const Signup = () => {
                 password,
                 role 
             });
-            alert(response.data.message);
-            
+            toast.success(response.data.message);
             setUsername('');
             setEmail('');
             setPassword('');
@@ -34,119 +35,77 @@ const Signup = () => {
             setRole('user');
         } catch (error) {
             console.error(error);
-            alert('Error creating user');
+            toast.error('Error creating user');
         }
     };
 
     return (
-        <div style={{
-            minHeight: '100vh', 
-            backgroundImage: 'url("https://your-image-url-here.jpg")', // Replace with your background image URL
-            backgroundSize: 'cover', 
-            backgroundPosition: 'center', 
-            display: 'flex', 
-            justifyContent: 'center', 
-            alignItems: 'center', 
-            position: 'relative'
-        }}>
-            <div 
-                style={{ 
-                    maxWidth: '500px', 
-                    margin: 'auto', 
-                    borderRadius: '15px', 
-                    background: 'rgba(255, 255, 255, 0.9)', 
-                    boxShadow: '0 4px 20px rgba(0, 0, 0, 0.2)',
-                    backdropFilter: 'blur(10px)',
-                    padding: '20px',
-                    border: '1px solid #ff5722'
-                }}
-            >
-                <h2 className="text-center mb-4" style={{ color: '#00695c', fontWeight: 'bold' }}>Signup Page</h2>
+        <div 
+            className="min-vh-100 d-flex justify-content-center align-items-center" 
+            style={{ 
+                backgroundSize: 'cover', 
+                backgroundPosition: 'center'
+            }}
+        >
+            <div className="bg-white p-4 rounded shadow" style={{ maxWidth: '400px', width: '100%', border: '1px solid #dcdcdc', opacity: 0.9 }}>
+                <h2 className="text-center mb-4" style={{ color: '#34495e', fontWeight: 'bold', fontSize: '26px' }}>Create an Account</h2>
                 <form onSubmit={handleSubmit}>
                     <div className="mb-3 position-relative">
-                        <FontAwesomeIcon icon={faUser} style={{ position: 'absolute', top: '12px', left: '12px', color: '#ff5722' }} />
+                        <FontAwesomeIcon icon={faUser} className="position-absolute" style={{ top: '12px', left: '12px', color: '#7f8c8d' }} />
                         <input 
                             type="text" 
-                            style={{ 
-                                width: '100%', 
-                                padding: '12px 40px', 
-                                borderRadius: '10px', 
-                                border: '1px solid #ff5722', 
-                                transition: 'border-color 0.3s', 
-                                boxShadow: '0 2px 5px rgba(255, 87, 34, 0.2)' 
-                            }}
+                            className="form-control ps-5" 
                             value={username} 
                             onChange={(e) => setUsername(e.target.value)} 
                             placeholder="Username"
                             required 
+                            style={{ borderColor: '#7f8c8d', fontSize: '16px' }}
                         />
                     </div>
                     <div className="mb-3 position-relative">
-                        <FontAwesomeIcon icon={faEnvelope} style={{ position: 'absolute', top: '12px', left: '12px', color: '#ff5722' }} />
+                        <FontAwesomeIcon icon={faEnvelope} className="position-absolute" style={{ top: '12px', left: '12px', color: '#7f8c8d' }} />
                         <input 
                             type="email" 
-                            style={{ 
-                                width: '100%', 
-                                padding: '12px 40px', 
-                                borderRadius: '10px', 
-                                border: '1px solid #ff5722', 
-                                transition: 'border-color 0.3s', 
-                                boxShadow: '0 2px 5px rgba(255, 87, 34, 0.2)' 
-                            }}
+                            className="form-control ps-5" 
                             value={email} 
                             onChange={(e) => setEmail(e.target.value)} 
                             placeholder="Email"
                             required 
+                            style={{ borderColor: '#7f8c8d', fontSize: '16px' }}
                         />
                     </div>
                     <div className="mb-3 position-relative">
-                        <FontAwesomeIcon icon={faLock} style={{ position: 'absolute', top: '12px', left: '12px', color: '#ff5722' }} />
+                        <FontAwesomeIcon icon={faLock} className="position-absolute" style={{ top: '12px', left: '12px', color: '#7f8c8d' }} />
                         <input 
                             type="password" 
-                            style={{ 
-                                width: '100%', 
-                                padding: '12px 40px', 
-                                borderRadius: '10px', 
-                                border: '1px solid #ff5722', 
-                                transition: 'border-color 0.3s', 
-                                boxShadow: '0 2px 5px rgba(255, 87, 34, 0.2)' 
-                            }}
+                            className="form-control ps-5" 
                             value={password} 
                             onChange={(e) => setPassword(e.target.value)} 
                             placeholder="Password"
                             required 
+                            style={{ borderColor: '#7f8c8d', fontSize: '16px' }}
                         />
                     </div>
                     <div className="mb-3 position-relative">
-                        <FontAwesomeIcon icon={faLock} style={{ position: 'absolute', top: '12px', left: '12px', color: '#ff5722' }} />
+                        <FontAwesomeIcon icon={faLock} className="position-absolute" style={{ top: '12px', left: '12px', color: '#7f8c8d' }} />
                         <input 
                             type="password" 
-                            style={{ 
-                                width: '100%', 
-                                padding: '12px 40px', 
-                                borderRadius: '10px', 
-                                border: '1px solid #ff5722', 
-                                transition: 'border-color 0.3s', 
-                                boxShadow: '0 2px 5px rgba(255, 87, 34, 0.2)' 
-                            }}
+                            className="form-control ps-5" 
                             value={confirmPassword} 
                             onChange={(e) => setConfirmPassword(e.target.value)} 
                             placeholder="Confirm Password"
                             required 
+                            style={{ borderColor: '#7f8c8d', fontSize: '16px' }}
                         />
                     </div>
                     <div className="mb-3">
-                        <label htmlFor="role" style={{ color: '#00695c', fontWeight: 'bold' }}>Select Your Role</label>
+                        <label htmlFor="role" className="form-label" style={{ color: '#34495e', fontWeight: 'bold', fontSize: '16px' }}>Select Your Role</label>
                         <select 
                             id="role" 
+                            className="form-select" 
                             value={role} 
                             onChange={(e) => setRole(e.target.value)} 
-                            style={{ 
-                                width: '100%', 
-                                borderRadius: '10px', 
-                                border: '1px solid #ff5722', 
-                                padding: '10px'
-                            }}
+                            style={{ borderColor: '#7f8c8d', fontSize: '16px' }}
                         >
                             <option value="user">User</option>
                             <option value="admin">Admin</option>
@@ -154,23 +113,14 @@ const Signup = () => {
                     </div>
                     <button 
                         type="submit" 
-                        style={{ 
-                            width: '100%', 
-                            borderRadius: '10px', 
-                            backgroundColor: '#ff5722', 
-                            color: '#fff', 
-                            border: 'none', 
-                            transition: 'background-color 0.3s',
-                            padding: '10px',
-                            fontWeight: 'bold'
-                        }} 
-                        onMouseEnter={(e) => e.target.style.backgroundColor = '#e64a19'} 
-                        onMouseLeave={(e) => e.target.style.backgroundColor = '#ff5722'}
+                        className="btn btn-success w-100" 
+                        style={{ fontWeight: 'bold', fontSize: '16px' }}
                     >
                         Create Account
                     </button>
                 </form>
             </div>
+            <ToastContainer />
         </div>
     );
 };
