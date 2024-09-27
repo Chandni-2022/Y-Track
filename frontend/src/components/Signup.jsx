@@ -15,33 +15,33 @@ const Signup = () => {
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
   const [role, setRole] = useState("user");
-  
+  const [loading, setLoading] = useState(false);
 
   const handleSubmit = async (e) => {
+    setLoading(true);
     e.preventDefault();
-
     if (password !== confirmPassword) {
       toast.error("Passwords do not match!",{pauseOnHover:false});
       return;
     }
     try {
-      const res = await axios.post("http://localhost:5001/api/signup", {
-        username,
-        email,
-        password,
-        role,
-      });
-      console.log(res.data.message);
-      toast.success(res.data.message, {pauseOnHover:false});
+      const res = await axios.post("http://localhost:5001/api/signup", { username, email, password, role });
+      const msg = res.data.message;
+      if(msg === "User created successfully!") toast.success(msg, {pauseOnHover:false});
+      else toast.error(msg, {pauseOnHover:false});
+      setDefault();
+    } catch (error) {
+      console.log(error);
+      toast.error("Error creating user");
+    }
+    function setDefault() {
       setUsername("");
       setEmail("");
       setPassword("");
       setConfirmPassword("");
       setRole("user");
-    } catch (error) {
-      console.log(error);
-      toast.error("Error creating user");
     }
+    setLoading(false);
   };
 
   return (
@@ -193,7 +193,7 @@ const Signup = () => {
           
           {/* Register Button */}
           <button
-            type="submit"
+            type={loading? "Loading...":"submit"}
             className="btn btn-success w-100"
             style={{ fontWeight: "bold", fontSize: "16px" }}
           >
