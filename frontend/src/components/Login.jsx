@@ -5,7 +5,6 @@ import { faEye, faEyeSlash, faEnvelope, faLock } from '@fortawesome/free-solid-s
 import axios from 'axios';
 import { toast, ToastContainer } from "react-toastify";
 import { Link } from 'react-router-dom';
-// import { useNavigate } from 'react-router-dom';
 
 const Login = () => {
   const [showPassword, setShowPassword] = useState(false);
