@@ -1,20 +1,30 @@
 import React, { useState } from 'react'
-import { Button, Form } from 'react-bootstrap'
+import { Button } from 'react-bootstrap'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faEye, faEyeSlash, faEnvelope, faLock } from '@fortawesome/free-solid-svg-icons';
 import axios from 'axios';
-import { toast } from "react-toastify";
+import { toast, ToastContainer } from "react-toastify";
+// import { useNavigate } from 'react-router-dom';
 
 const Login = () => {
   const [showPassword, setShowPassword] = useState(false);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [role, setRole] = useState("user");
+  // const navigate = useNavigate();
   
 
   const handleSubmit = async (e) => {
     e.preventDefault();
 
+    const res = await axios.post("http://localhost:5001/api/login", {email, password})
+    const msg = res.data.message
+    console.log(res.data.message);
+    
+    if( msg === "Login successful!")
+      toast.success(res.data.message,{pauseOnHover:false}) 
+    else 
+      toast.error(res.data.message,{pauseOnHover:false})
     
     
   };
@@ -124,11 +134,13 @@ const Login = () => {
           
           <p className="text-center">Don't have an account? 
             <span style={{cursor : "pointer", color: 'green', fontSize: '1.16rem'}}
+            // onClick={() => navigate('/signup')} 
             > Register</span> here
           </p>
 
         </form>
       </div>
+      <ToastContainer position='bottom-center' />
     </div>
   );
 }

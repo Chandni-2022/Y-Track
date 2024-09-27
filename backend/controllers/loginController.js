@@ -13,7 +13,7 @@ const authUser = async(req, res) => {
     
     const isPasswordMatched = await bcryptjs.compare(password, validUser.password);
     if(!isPasswordMatched) {
-        res.status(402).json({messgae: "Password mismatch!"})
+        res.json({message: "Password mismatch!"})
         return;
     }
     // If user exists and password matched then...
