@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import axios from "axios";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faEye, faEyeSlash, faUser, faEnvelope, faLock } from "@fortawesome/free-solid-svg-icons";
-import { toast } from "react-toastify";
+import { toast, ToastContainer } from "react-toastify";
 import { Button } from "react-bootstrap";
 
 
@@ -20,24 +20,25 @@ const Signup = () => {
     e.preventDefault();
 
     if (password !== confirmPassword) {
-      toast.error("Passwords do not match!");
+      toast.error("Passwords do not match!",{pauseOnHover:false});
       return;
     }
     try {
-      const response = await axios.post("http://localhost:5000/api/signup", {
+      const res = await axios.post("http://localhost:5001/api/signup", {
         username,
         email,
         password,
         role,
       });
-      toast.success(response.data.message);
+      console.log(res.data.message);
+      toast.success(res.data.message, {pauseOnHover:false});
       setUsername("");
       setEmail("");
       setPassword("");
       setConfirmPassword("");
       setRole("user");
     } catch (error) {
-      console.error(error);
+      console.log(error);
       toast.error("Error creating user");
     }
   };
@@ -205,6 +206,7 @@ const Signup = () => {
 
         </form>
       </div>
+      <ToastContainer position="bottom-center"/>
     </div>
   );
 };

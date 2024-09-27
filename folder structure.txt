@@ -1,0 +1,731 @@
+folder structure
+
+Y-Track
+  -backend
+    -config
+      db.js
+    -controllers
+      loginController.js
+      signUpController.js
+    -models
+      userModel.js
+    -routes
+      userRoutes.js
+    server.js
+  -frontend
+    -node_modules
+    -public
+      index.html
+    -src
+      -components
+        Home.jsx
+        Login.jsx
+        Signup.jsx
+      App.css
+      App.jsx
+      index.css
+      index.js
+      .gitignore
+      package-lock.json
+      package.json
+  .env
+  .gitignore
+  package-lock.json
+  package.json
+
+files:-
+//db.js
+"const mongoose = require("mongoose");
+
+const connectToDB = () => {
+    mongoose
+  .connect(process.env.MONGO_URI)
+  .then(() => console.log("MongoDB connected"))
+  .catch((err) => console.log(err));
+}
+
+module.exports = connectToDB;"
+
+//loginController.js
+"const bcryptjs = require("bcryptjs");
+const User = require("../models/userModel");
+
+const authUser = async(req, res) => {
+    const {email, password} = req.body;
+
+    const validUser = await User.findOne({email})
+    if(!validUser) {
+        res.status(401).json({message: "Invalid user!"})
+        return;
+    }
+    console.log(password, validUser.password);
+    
+    const isPasswordMatched = await bcryptjs.compare(password, validUser.password);
+    if(!isPasswordMatched) {
+        res.json({message: "Password mismatch!"})
+        return;
+    }
+    // If user exists and password matched then...
+    res.status(200).json({
+        message: "Login successful!",
+        _id: validUser._id,
+        password: validUser.password,
+        email: validUser.email,
+        // token: generateToken(validUser._id)
+    })
+}
+
+module.exports = authUser;"
+
+//signUpController.js
+"const bcryptjs = require('bcryptjs')
+const User = require('../models/userModel');
+
+
+const registerUser = async (req, res) => {
+  const { username, email, password } = req.body;
+  
+  const userExists = await User.findOne({email})
+  if(userExists) {
+    res.json({ message: "User already exists!" })
+    return;
+  }
+
+  const hashedPassword = await hashPassword(password);
+  console.log(`password : ${password}`);
+  console.log(`Hashed Password : ${hashedPassword}`);
+
+  const newUser = await User.create({username, email, password: hashedPassword})
+  if(newUser) {
+    res.status(201).json({
+        message: "User created successfully!",
+        _id: newUser._id,
+        name: newUser.username,
+        email: newUser.email,
+        // token: generateToken(newUser._id)
+    })
+  } else {
+    res.status(400).json({message: "Registration failed!"})
+    return;
+  }
+ 
+};
+
+const hashPassword = async(password) => {
+    const salt = await bcryptjs.genSalt(10);
+    const hashedPassword = await bcryptjs.hash(password, salt);
+    return hashedPassword;
+}
+
+module.exports = registerUser;"
+
+//userModel.js
+"const mongoose = require('mongoose')
+
+const UserSchema = new mongoose.Schema({
+  username: { type: String, required: true },
+  email: { type: String, required: true },
+  password: { type: String, required: true },
+},{ timestamps: true });
+
+const User = mongoose.model("User", UserSchema);
+
+module.exports = User;"
+
+//userRoutes.js
+"const express = require('express');
+const registerUser = require('../controllers/signUpController');
+const authUser = require('../controllers/loginController');
+const router = express.Router()
+
+router.post("/signup", registerUser);
+router.post("/login", authUser);
+module.exports = router;"
+
+//server.js
+"const express = require('express');
+const registerUser = require('../controllers/signUpController');
+const authUser = require('../controllers/loginController');
+const router = express.Router()
+
+router.post("/signup", registerUser);
+router.post("/login", authUser);
+module.exports = router;"
+
+//index.html
+"<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <link rel="icon" href="%PUBLIC_URL%/favicon.ico" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="theme-color" content="#000000" />
+    <meta name="description" content="Web site created using create-react-app" />
+    <link rel="apple-touch-icon" href="%PUBLIC_URL%/logo192.png" />
+    <link rel="manifest" href="%PUBLIC_URL%/manifest.json" />
+    <title>Y-Track</title>
+  </head>
+  <body>
+    <noscript>You need to enable JavaScript to run this app.</noscript>
+    <div id="root"></div>
+  </body>
+</html>
+"
+//Home.jsx
+"
+import React from "react";
+import { Button, Col, Container, Row } from "react-bootstrap";
+import { Link } from "react-router-dom";
+
+
+const Home = () => {
+  
+
+  return (
+    <div>
+      
+        <Container fluid className="d-flex vh-100">
+        <Row className="m-auto">
+            <Col className="text-center">
+                <Link to="/signup">
+                    <Button variant="primary" size="lg" className="mx-2" > Register </Button>
+                </Link>            
+
+                <Link to="/login">
+                    <Button variant="success" size="lg" className="mx-2" > Login </Button>
+                </Link>
+            </Col>
+        </Row>
+        </Container>
+    </div>
+  );
+};
+
+export default Home;"
+
+//Login.jsx
+"import React, { useState } from 'react'
+import { Button } from 'react-bootstrap'
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faEye, faEyeSlash, faEnvelope, faLock } from '@fortawesome/free-solid-svg-icons';
+import axios from 'axios';
+import { toast, ToastContainer } from "react-toastify";
+// import { useNavigate } from 'react-router-dom';
+
+const Login = () => {
+  const [showPassword, setShowPassword] = useState(false);
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [role, setRole] = useState("user");
+  // const navigate = useNavigate();
+  
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+
+    const res = await axios.post("http://localhost:5001/api/login", {email, password})
+    const msg = res.data.message
+    console.log(res.data.message);
+    
+    if( msg === "Login successful!")
+      toast.success(res.data.message,{pauseOnHover:false}) 
+    else 
+      toast.error(res.data.message,{pauseOnHover:false})
+    
+    
+  };
+
+  return (
+    <div
+      className="min-vh-100 d-flex justify-content-center align-items-center"
+      style={{
+        backgroundSize: "cover",
+        backgroundPosition: "center",
+      }}
+    >
+      <div
+        className="bg-white p-4 rounded shadow"
+        style={{
+          maxWidth: "400px",
+          width: "100%",
+          border: "1px solid #dcdcdc",
+          opacity: 0.9,
+        }}
+      >
+        <h2
+          className="text-center mb-4"
+          style={{ color: "#34495e", fontWeight: "bold", fontSize: "26px" }}
+        >
+          Log in
+        </h2>
+
+        <form onSubmit={handleSubmit}>
+          
+
+          <div className="mb-3 position-relative">
+            <FontAwesomeIcon
+              icon={faEnvelope}
+              className="position-absolute"
+              style={{ top: "12px", left: "12px", color: "#7f8c8d" }}
+            />
+            <input
+              type="email"
+              className="form-control ps-5"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              placeholder="Email"
+              required
+              style={{ borderColor: "#7f8c8d", fontSize: "16px" }}
+            />
+          </div>
+
+          <div className="mb-3 position-relative">
+            <FontAwesomeIcon
+              icon={faLock}
+              className="position-absolute"
+              style={{ top: "12px", left: "12px", color: "#7f8c8d" }}
+            />
+            <input
+              type={showPassword? "text" :"password"}
+              className="form-control ps-5"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              placeholder="Password"
+              required
+              style={{ borderColor: "#7f8c8d", fontSize: "16px" }}
+            />
+            <Button variant="link" 
+            onClick={ () => setShowPassword(!showPassword) }
+            style={{
+                position: 'absolute',
+                right: '10px',
+                top: '50%',
+                transform: 'translateY(-50%)',
+                background: 'transparent',
+                border: 'none',
+                color: 'grey'
+            }}
+            >
+              <FontAwesomeIcon icon={showPassword ? faEyeSlash : faEye} />
+            </Button>
+          </div>
+
+         
+          <div className="mb-3">
+            <label
+              htmlFor="role"
+              className="form-label"
+              style={{ color: "#34495e", fontWeight: "bold", fontSize: "16px" }}
+            >
+              Select Your Role
+            </label>
+            <select
+              id="role"
+              className="form-select"
+              value={role}
+              onChange={(e) => setRole(e.target.value)}
+              style={{ borderColor: "#7f8c8d", fontSize: "16px" }}
+            >
+              <option value="user">User</option>
+              <option value="admin">Admin</option>
+            </select>
+          </div>
+          <button
+            type="submit"
+            className="btn btn-success w-100"
+            style={{ fontWeight: "bold", fontSize: "16px" }}
+          >
+            Login
+          </button>
+          
+          <p className="text-center">Don't have an account? 
+            <span style={{cursor : "pointer", color: 'green', fontSize: '1.16rem'}}
+            // onClick={() => navigate('/signup')} 
+            > Register</span> here
+          </p>
+
+        </form>
+      </div>
+      <ToastContainer position='bottom-center' />
+    </div>
+  );
+}
+
+export default Login
+"
+
+//Signup.jsx
+"import React, { useState } from "react";
+import axios from "axios";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faEye, faEyeSlash, faUser, faEnvelope, faLock } from "@fortawesome/free-solid-svg-icons";
+import { toast, ToastContainer } from "react-toastify";
+import { Button } from "react-bootstrap";
+
+
+const Signup = () => {
+  const [showPassword, setShowPassword] = useState(false)
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false)
+  const [username, setUsername] = useState("");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
+  const [role, setRole] = useState("user");
+  
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+
+    if (password !== confirmPassword) {
+      toast.error("Passwords do not match!",{pauseOnHover:false});
+      return;
+    }
+    try {
+      const res = await axios.post("http://localhost:5001/api/signup", {
+        username,
+        email,
+        password,
+        role,
+      });
+      console.log(res.data.message);
+      toast.success(res.data.message, {pauseOnHover:false});
+      setUsername("");
+      setEmail("");
+      setPassword("");
+      setConfirmPassword("");
+      setRole("user");
+    } catch (error) {
+      console.log(error);
+      toast.error("Error creating user");
+    }
+  };
+
+  return (
+    <div
+      className="min-vh-100 d-flex justify-content-center align-items-center"
+      style={{
+        backgroundSize: "cover",
+        backgroundPosition: "center",
+      }}
+    >
+      <div
+        className="bg-white p-4 rounded shadow"
+        style={{
+          maxWidth: "400px",
+          width: "100%",
+          border: "1px solid #dcdcdc",
+          opacity: 0.9,
+        }}
+      >
+        {/* Heading - Create an account */}
+        <h2
+          className="text-center mb-4"
+          style={{ color: "#34495e", fontWeight: "bold", fontSize: "26px" }}
+        >
+          Create an Account
+        </h2>
+
+        <form onSubmit={handleSubmit}>
+          {/* UserName */}
+          <div className="mb-3 position-relative">
+            <FontAwesomeIcon
+              icon={faUser}
+              className="position-absolute"
+              style={{ top: "12px", left: "12px", color: "#7f8c8d" }}
+            />
+            <input
+              type="text"
+              className="form-control ps-5"
+              value={username}
+              onChange={(e) => setUsername(e.target.value)}
+              placeholder="Username"
+              required
+              style={{ borderColor: "#7f8c8d", fontSize: "16px" }}
+            />
+          </div>
+
+          {/* Email */}
+          <div className="mb-3 position-relative">
+            <FontAwesomeIcon
+              icon={faEnvelope}
+              className="position-absolute"
+              style={{ top: "12px", left: "12px", color: "#7f8c8d" }}
+            />
+            <input
+              type="email"
+              className="form-control ps-5"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              placeholder="Email"
+              required
+              style={{ borderColor: "#7f8c8d", fontSize: "16px" }}
+            />
+          </div>
+
+          {/* Password */}
+          <div className="mb-3 position-relative">
+            <FontAwesomeIcon
+              icon={faLock}
+              className="position-absolute"
+              style={{ top: "12px", left: "12px", color: "#7f8c8d" }}
+            />
+            <input
+              type={showPassword? "text":"password"}
+              className="form-control ps-5"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              placeholder="Password"
+              required
+              style={{ borderColor: "#7f8c8d", fontSize: "16px" }}
+            />
+            <Button variant="link" 
+            onClick={ () => setShowPassword(!showPassword) }
+            style={{
+                position: 'absolute',
+                right: '10px',
+                top: '50%',
+                transform: 'translateY(-50%)',
+                background: 'transparent',
+                border: 'none',
+                color: 'grey'
+            }}
+            >
+              <FontAwesomeIcon icon={showPassword ? faEyeSlash : faEye} />
+            </Button>
+          </div>
+
+          {/* Confirm Password */}
+          <div className="mb-3 position-relative">
+            <FontAwesomeIcon
+              icon={faLock}
+              className="position-absolute"
+              style={{ top: "12px", left: "12px", color: "#7f8c8d" }}
+            />
+            <input
+              type={showConfirmPassword? "text":"password"}
+              className="form-control ps-5"
+              value={confirmPassword}
+              onChange={(e) => setConfirmPassword(e.target.value)}
+              placeholder="Confirm Password"
+              required
+              style={{ borderColor: "#7f8c8d", fontSize: "16px" }}
+            />
+            <Button variant="link" 
+            onClick={ () => setShowConfirmPassword(!showConfirmPassword) }
+            style={{
+                position: 'absolute',
+                right: '10px',
+                top: '50%',
+                transform: 'translateY(-50%)',
+                background: 'transparent',
+                border: 'none',
+                color: 'grey'
+            }}
+            >
+              <FontAwesomeIcon icon={showConfirmPassword ? faEyeSlash : faEye} />
+            </Button>
+          </div>
+
+          {/* Role Select */}
+          <div className="mb-3">
+            <label
+              htmlFor="role"
+              className="form-label"
+              style={{ color: "#34495e", fontWeight: "bold", fontSize: "16px" }}
+            >
+              Select Your Role
+            </label>
+            <select
+              id="role"
+              className="form-select"
+              value={role}
+              onChange={(e) => setRole(e.target.value)}
+              style={{ borderColor: "#7f8c8d", fontSize: "16px" }}
+            >
+              <option value="user">User</option>
+              <option value="admin">Admin</option>
+            </select>
+          </div>
+          
+          {/* Register Button */}
+          <button
+            type="submit"
+            className="btn btn-success w-100"
+            style={{ fontWeight: "bold", fontSize: "16px" }}
+          >
+            Create Account
+          </button>
+          
+          <p className="text-center">Have an account? 
+            <span style={{cursor : "pointer", color: 'green', fontSize: '1.16rem'}}
+            >Login</span>
+          </p>
+
+        </form>
+      </div>
+      <ToastContainer position="bottom-center"/>
+    </div>
+  );
+};
+
+export default Signup;
+"
+//App.css
+ "//nothing here"
+
+//App.jsx
+"import React from "react";
+import { BrowserRouter, Routes, Route} from "react-router-dom";
+import "bootstrap/dist/css/bootstrap.min.css";
+import "react-toastify/dist/ReactToastify.css";
+import Signup from "./components/Signup.jsx";
+import Login from "./components/Login.jsx";
+import Home from "./components/Home.jsx";
+
+
+const App = () => {
+  return (
+    <BrowserRouter>
+      <Routes>
+        <Route path='/home' element={ <Home /> } />
+        <Route path='/signup' element={ <Signup /> } />
+        <Route path='/login' element={ <Login /> } />
+      </Routes>
+    </BrowserRouter>
+  )
+}
+
+export default App
+"
+
+//index.css
+"body {
+  margin: 0;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
+    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
+    sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+code {
+  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
+    monospace;
+}
+"
+
+//index.js
+"import React from "react";
+import ReactDOM from "react-dom/client";
+import "./index.css";
+import App from "./App";
+
+const root = ReactDOM.createRoot(document.getElementById("root"));
+root.render(
+  <React.StrictMode>
+    <App />
+  </React.StrictMode>
+);
+"
+//frontend/.gitignore
+"git ignore files"
+
+//frontend/package-lock.json
+"Lengthy code"
+
+//frontend/package.json
+"{
+  "name": "frontend",
+  "version": "0.1.0",
+  "private": true,
+  "dependencies": {
+    "@testing-library/jest-dom": "^5.17.0",
+    "@testing-library/react": "^13.4.0",
+    "@testing-library/user-event": "^13.5.0",
+    "bootstrap": "^5.3.3",
+    "react": "^18.3.1",
+    "react-bootstrap": "^2.10.5",
+    "react-dom": "^18.3.1",
+    "react-scripts": "5.0.1",
+    "react-toastify": "^10.0.5",
+    "web-vitals": "^2.1.4"
+  },
+  "scripts": {
+    "start": "react-scripts start",
+    "build": "react-scripts build",
+    "test": "react-scripts test",
+    "eject": "react-scripts eject"
+  },
+  "eslintConfig": {
+    "extends": [
+      "react-app",
+      "react-app/jest"
+    ]
+  },
+  "browserslist": {
+    "production": [
+      ">0.2%",
+      "not dead",
+      "not op_mini all"
+    ],
+    "development": [
+      "last 1 chrome version",
+      "last 1 firefox version",
+      "last 1 safari version"
+    ]
+  },
+  "devDependencies": {
+    "@babel/plugin-proposal-private-property-in-object": "^7.21.11"
+  }
+}
+"
+
+//node_modules
+
+//.env
+"
+PORT = 5001
+
+MONGO_URI = 'mongodb+srv://CR0901:CR0901@cluster-x.43qj0.mongodb.net/Track?retryWrites=true&w=majority'
+"
+
+//package-lock.json
+"Large file"
+
+//package.json
+"{
+  "name": "y-track",
+  "version": "1.0.0",
+  "description": "",
+  "main": "server.js",
+  "scripts": {
+    "start": "nodemon backend/server.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "@fortawesome/fontawesome-svg-core": "^6.6.0",
+    "@fortawesome/free-solid-svg-icons": "^6.6.0",
+    "@fortawesome/react-fontawesome": "^0.2.2",
+    "axios": "^1.7.7",
+    "bcryptjs": "^2.4.3",
+    "body-parser": "^1.20.3",
+    "bootstrap": "^5.3.3",
+    "cors": "^2.8.5",
+    "dotenv": "^16.4.5",
+    "express": "^4.21.0",
+    "moment": "^2.30.1",
+    "mongoose": "^8.6.3",
+    "react-bootstrap": "^2.10.4",
+    "react-router-dom": "^6.26.2",
+    "react-toastify": "^10.0.5",
+    "recharts": "^2.12.7",
+    "socket.io": "^4.8.0",
+    "socket.io-client": "^4.8.0"
+  }
+}
+"
+
+     
