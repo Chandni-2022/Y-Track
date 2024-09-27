@@ -9,7 +9,7 @@ import Login from "./components/Login.jsx"
 const App = () => {
   return <BrowserRouter >
           <Routes>
-            <Route path="/home" element={ <Home/> }/>
+            <Route path="/welcome" element={ <Home/> }/>
             <Route path="/signup" element={ <Signup /> }/>
             <Route path="/login" element={ <Login /> }/>
           </Routes>
