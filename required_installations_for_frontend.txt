@@ -19,6 +19,9 @@
 
     6. React Toastify (Notifications)
         # npm install react-toastify
+            -> Add this to index.js 
+                import 'react-toastify/dist/ReactToastify.css';
+
 
 
 ### Optional
