@@ -1,160 +1,72 @@
-import React, { useState } from "react";
-import axios from "axios";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faUser, faEnvelope, faLock } from "@fortawesome/free-solid-svg-icons";
-import { toast } from "react-toastify";
+import React, { useState } from 'react'
+import "bootstrap/dist/css/bootstrap.min.css";
+import "react-toastify/dist/ReactToastify.css";
+import Signup from './components/Signup'
+import { Button, Col, Container, Row } from 'react-bootstrap';
+import Login from './components/Login';
 
-const Signup = () => {
-  const [username, setUsername] = useState("");
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  const [confirmPassword, setConfirmPassword] = useState("");
-  const [role, setRole] = useState("user");
+/*const App = () => {
+  const [showSignup, setShowSignup] = useState(false)
+  const [showSignin, setShowSignin] = useState(false)
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-
-    if (password !== confirmPassword) {
-      toast.error("Passwords do not match!");
-      return;
-    }
-    try {
-      const response = await axios.post("http://localhost:5000/api/signup", {
-        username,
-        email,
-        password,
-        role,
-      });
-      toast.success(response.data.message);
-      setUsername("");
-      setEmail("");
-      setPassword("");
-      setConfirmPassword("");
-      setRole("user");
-    } catch (error) {
-      console.error(error);
-      toast.error("Error creating user");
-    }
-  };
+  const handleSignUpClick = () => { 
+          setShowSignup(true)
+          setShowSignin(false)
+  }
+  const handleSigninClick = () => { 
+          setShowSignin(true)
+          setShowSignup(false)
+  }
 
   return (
-    <div
-      className="min-vh-100 d-flex justify-content-center align-items-center"
-      style={{
-        backgroundSize: "cover",
-        backgroundPosition: "center",
-      }}
-    >
-      <div
-        className="bg-white p-4 rounded shadow"
-        style={{
-          maxWidth: "400px",
-          width: "100%",
-          border: "1px solid #dcdcdc",
-          opacity: 0.9,
-        }}
-      >
-        <h2
-          className="text-center mb-4"
-          style={{ color: "#34495e", fontWeight: "bold", fontSize: "26px" }}
-        >
-          Create an Account
-        </h2>
-        <form onSubmit={handleSubmit}>
-          <div className="mb-3 position-relative">
-            <FontAwesomeIcon
-              icon={faUser}
-              className="position-absolute"
-              style={{ top: "12px", left: "12px", color: "#7f8c8d" }}
-            />
-            <input
-              type="text"
-              className="form-control ps-5"
-              value={username}
-              onChange={(e) => setUsername(e.target.value)}
-              placeholder="Username"
-              required
-              style={{ borderColor: "#7f8c8d", fontSize: "16px" }}
-            />
+    <div>
+      {
+        (!showSignin && !showSignup)? 
+        (
+          <div>
+            <Button variant="primary" size='lg' onClick={ handleSignUpClick } >Sign up</Button>
+            <Button variant="secondary" size='lg' onClick={ handleSigninClick }>Sign in</Button>
           </div>
-          <div className="mb-3 position-relative">
-            <FontAwesomeIcon
-              icon={faEnvelope}
-              className="position-absolute"
-              style={{ top: "12px", left: "12px", color: "#7f8c8d" }}
-            />
-            <input
-              type="email"
-              className="form-control ps-5"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              placeholder="Email"
-              required
-              style={{ borderColor: "#7f8c8d", fontSize: "16px" }}
-            />
-          </div>
-          <div className="mb-3 position-relative">
-            <FontAwesomeIcon
-              icon={faLock}
-              className="position-absolute"
-              style={{ top: "12px", left: "12px", color: "#7f8c8d" }}
-            />
-            <input
-              type="password"
-              className="form-control ps-5"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              placeholder="Password"
-              required
-              style={{ borderColor: "#7f8c8d", fontSize: "16px" }}
-            />
-          </div>
-          <div className="mb-3 position-relative">
-            <FontAwesomeIcon
-              icon={faLock}
-              className="position-absolute"
-              style={{ top: "12px", left: "12px", color: "#7f8c8d" }}
-            />
-            <input
-              type="password"
-              className="form-control ps-5"
-              value={confirmPassword}
-              onChange={(e) => setConfirmPassword(e.target.value)}
-              placeholder="Confirm Password"
-              required
-              style={{ borderColor: "#7f8c8d", fontSize: "16px" }}
-            />
-          </div>
-          <div className="mb-3">
-            <label
-              htmlFor="role"
-              className="form-label"
-              style={{ color: "#34495e", fontWeight: "bold", fontSize: "16px" }}
-            >
-              Select Your Role
-            </label>
-            <select
-              id="role"
-              className="form-select"
-              value={role}
-              onChange={(e) => setRole(e.target.value)}
-              style={{ borderColor: "#7f8c8d", fontSize: "16px" }}
-            >
-              <option value="user">User</option>
-              <option value="admin">Admin</option>
-            </select>
-          </div>
-          <button
-            type="submit"
-            className="btn btn-success w-100"
-            style={{ fontWeight: "bold", fontSize: "16px" }}
-          >
-            Create Account
-          </button>
-        </form>
-      </div>
+        )
+        :
+        showSignup? <Signup /> : <Login /> 
+      }
+
+   </div>
+  );
+}
+*/
+
+
+const App = () => {
+  
+  const [view, setView] = useState('')
+
+  const handleRegisterClick = () => setView('register')
+  const handleLoginClick = () => setView('login')
+
+  return (
+    <div>
+      { view === '' && (
+        <>
+          <Container fluid className="d-flex vh-100" >
+            <Row className="m-auto">
+              <Col className="text-center">
+
+                <Button variant="primary" size="lg" className="mx-2" 
+                  onClick={ handleRegisterClick } > Register </Button>
+
+                <Button variant="success" size="lg" className="mx-2"
+                  onClick={ handleLoginClick } > Login </Button>
+
+              </Col>
+            </Row>
+          </Container>
+        </>
+      )}
+      {view === 'register' && <Signup />}
+      {view === 'login' && <Login />}
     </div>
   );
-};
-
-export default Signup;
+}
+export default App
