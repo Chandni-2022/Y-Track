@@ -4,6 +4,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faEye, faEyeSlash, faUser, faEnvelope, faLock } from "@fortawesome/free-solid-svg-icons";
 import { toast, ToastContainer } from "react-toastify";
 import { Button } from "react-bootstrap";
+import { Link } from "react-router-dom";
 
 
 const Signup = () => {
@@ -199,9 +200,9 @@ const Signup = () => {
             Create Account
           </button>
           
-          <p className="text-center">Have an account? 
-            <span style={{cursor : "pointer", color: 'green', fontSize: '1.16rem'}}
-            >Login</span>
+            <p className="text-center">Already have an account? 
+             <Link to='/login' style={{color:'green'}}> Login </Link> 
+            here
           </p>
 
         </form>

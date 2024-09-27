@@ -4,6 +4,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faEye, faEyeSlash, faEnvelope, faLock } from '@fortawesome/free-solid-svg-icons';
 import axios from 'axios';
 import { toast, ToastContainer } from "react-toastify";
+import { Link } from 'react-router-dom';
 // import { useNavigate } from 'react-router-dom';
 
 const Login = () => {
@@ -133,9 +134,8 @@ const Login = () => {
           </button>
           
           <p className="text-center">Don't have an account? 
-            <span style={{cursor : "pointer", color: 'green', fontSize: '1.16rem'}}
-            // onClick={() => navigate('/signup')} 
-            > Register</span> here
+             <Link to='/signup' style={{color:'green'}}> Register </Link> 
+            here
           </p>
 
         </form>
