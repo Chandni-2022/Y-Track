@@ -6,8 +6,6 @@ const connectToDB = require('./config/db');
 dotenv.config()
 const app = express();
 const PORT = process.env.PORT || 5500;
-console.log("PORT : ",PORT);
-
 const userRoutes = require('./routes/userRoutes.js')
 
 
