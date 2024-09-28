@@ -14,7 +14,7 @@ const Signup = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
-  const [role, setRole] = useState("user");
+  const [role, setRole] = useState("");
   const [loading, setLoading] = useState(false);
 
   const handleSubmit = async (e) => {
@@ -186,8 +186,9 @@ const Signup = () => {
               onChange={(e) => setRole(e.target.value)}
               style={{ borderColor: "#7f8c8d", fontSize: "16px" }}
             >
-              <option value="user">User</option>
-              <option value="admin">Admin</option>
+              <option value="Team-Member">Team Member</option>
+              <option value="Team-lead">Team Lead</option>
+              <option value="Admin">Admin</option>
             </select>
           </div>
           

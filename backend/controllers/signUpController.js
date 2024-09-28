@@ -3,7 +3,7 @@ const User = require('../models/userModel');
 
 
 const registerUser = async (req, res) => {
-  const { username, email, password } = req.body;
+  const { username, email, password,role } = req.body;
   
   const userExists = await User.findOne({email})
   if(userExists) {
@@ -12,16 +12,14 @@ const registerUser = async (req, res) => {
   }
 
   const hashedPassword = await hashPassword(password);
-  console.log(`password : ${password}`);
-  console.log(`Hashed Password : ${hashedPassword}`);
-
-  const newUser = await User.create({username, email, password: hashedPassword})
+  const newUser = await User.create({username, email, password: hashedPassword,role})
   if(newUser) {
     res.status(201).json({
         message: "User created successfully!",
         _id: newUser._id,
         name: newUser.username,
         email: newUser.email,
+        role: newUser.role
         // token: generateToken(newUser._id)
     })
   } else {
