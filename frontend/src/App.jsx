@@ -7,6 +7,7 @@ import Signup from "./components/Signup.jsx"
 import Login from "./components/Login.jsx"
 import ForgotPassword from "./components/ForgotPassword.jsx";
 import Dashboard from "./components/Dashboard.jsx";
+import CreateProject from "./components/CreateProject.jsx";
 
 
 const App = () => {
@@ -17,6 +18,8 @@ const App = () => {
             <Route path="/login" element={ <Login /> }/>
             <Route path="/forgot-password" element={ <ForgotPassword /> }/>
             <Route path="/dashboard" element={ <Dashboard /> }/>
+            <Route path="/create-project" element={ <CreateProject /> }/>
+
           </Routes>
     </BrowserRouter >
   
