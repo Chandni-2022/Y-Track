@@ -5,6 +5,8 @@ import {BrowserRouter, Routes, Route} from 'react-router-dom'
 import Home from "./components/Home.jsx";
 import Signup from "./components/Signup.jsx"
 import Login from "./components/Login.jsx"
+import ForgotPassword from "./components/ForgotPassword.jsx";
+import Dashboard from "./components/Dashboard.jsx";
 
 const App = () => {
   return <BrowserRouter >
@@ -12,6 +14,8 @@ const App = () => {
             <Route path="/" element={ <Home/> }/>
             <Route path="/signup" element={ <Signup /> }/>
             <Route path="/login" element={ <Login /> }/>
+            <Route path="/forgot-password" element={ <ForgotPassword /> }/>
+            <Route path="/dashboard" element={ <Dashboard /> }/>
           </Routes>
     </BrowserRouter >
   
