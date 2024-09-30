@@ -74,15 +74,30 @@ const ForgotPassword = () => {
     };
 
     return (
-        <div className="min-vh-100 d-flex justify-content-center align-items-center" style={{ backgroundSize: "cover", backgroundPosition: "center" }}>
-            <div className="bg-white p-4 rounded shadow" style={{ maxWidth: "400px", width: "100%", border: "1px solid #dcdcdc", opacity: 0.9 }}>
+        <div className="min-vh-100 d-flex justify-content-center align-items-center" 
+        style={{ backgroundSize: "cover", backgroundPosition: "center" }}>
+            <div className="bg-white p-4 rounded shadow" 
+            style={{ maxWidth: "400px", width: "100%", border: "1px solid #dcdcdc", opacity: 0.9 }}>
                 {/* OTP Form */}
-                <div className="mb-3 position-relative">
-                    <FontAwesomeIcon icon={faEnvelope} className="position-absolute" style={{ top: "12px", left: "12px", color: "#7f8c8d" }} />
-                    <input type="email" className="form-control ps-5" value={email} onChange={(e) => setEmail(e.target.value)} placeholder="Email" required style={{ borderColor: "#7f8c8d", fontSize: "16px" }} />
-                </div>
-                <button type="submit" className="btn btn-success w-100 mb-3" style={{ fontWeight: "bold", fontSize: "16px" }} onClick={handleSendOtp}>Send OTP</button>
-
+                <>
+                    <div className="mb-3 position-relative">
+                        <FontAwesomeIcon 
+                        icon={faEnvelope}
+                        className="position-absolute" 
+                        style={{ top: "12px", left: "12px", color: "#7f8c8d" }} 
+                        />
+                        <input 
+                        type="email" 
+                        className="form-control ps-5" 
+                        value={email} 
+                        onChange={(e) => setEmail(e.target.value)} 
+                        placeholder="Email" 
+                        required 
+                        style={{ borderColor: "#7f8c8d", fontSize: "16px" }} 
+                        />
+                    </div>
+                    <button type="submit" className="btn btn-success w-100 mb-3" style={{ fontWeight: "bold", fontSize: "16px" }} onClick={handleSendOtp}>Send OTP</button>
+                </>
                 {isOtpSent && (
                     <>
                         <div className="mb-3 position-relative">
