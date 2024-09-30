@@ -32,7 +32,7 @@ const Signup = () => {
       setDefault();
     } catch (error) {
       console.log(error);
-      toast.error("Error creating user");
+      toast.error("Error creating user",{ pauseOnHover: false });
     }
     function setDefault() {
       setUsername("");

@@ -1,135 +1,180 @@
-// import React, { useState } from 'react';
-// import axios from 'axios';
-// import { useHistory } from 'react-router-dom';
-// import { Button } from 'react-bootstrap';
-// import { toast } from 'react-toastify';
+import React, { useState } from 'react'
+import { faEnvelope } from "@fortawesome/free-solid-svg-icons";
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { toast } from 'react-toastify';
+import axios from 'axios';
+import { useNavigate } from 'react-router';
 
-// const PasswordReset = () => {
-//     const [step, setStep] = useState(1);
-//     const [email, setEmail] = useState('');
-//     const [otp, setOtp] = useState('');
-//     const [newPassword, setNewPassword] = useState('');
-//     const [confirmPassword, setConfirmPassword] = useState('');
-//     const [isOtpVerified, setIsOtpVerified] = useState(false);
-//     const [error, setError] = useState('');
-//     const [message, setMessage] = useState('');
+const ForgotPassword = () => {
+    const [email, setEmail] = useState("");
+    const [otp, setOtp] = useState("");
+    const [isOtpSent, setIsOtpSent] = useState(false);
+    const [newPassword, setNewPassword] = useState("");
+    const [confirmPassword, setConfirmPassword] = useState("");
+    const [isOtpVerified, setIsOtpVerified] = useState(false);
 
-//     const history = useHistory();
-
-//     // Function to handle sending OTP
-//     const handleSendOtp = async () => {
-//         try {
-//             const response = await axios.post('http://localhost:5001/api/send-otp', { email });
-//             setMessage(response.data.message);
-//             setError('');
-//             setStep(2); // Move to OTP verification step
-//         } catch (error) {
-//             setError(error.response?.data?.message || 'Error sending OTP');
-//             setMessage('');
-//         }
-//     };
-
-//     // Function to handle OTP verification
-//     const handleVerifyOtp = async () => {
-//         try {
-//             const response = await axios.post('http://localhost:5001/api/verify-otp', { email, otp });
-//             toast.success(response.data.message, { pauseOnHover: false });
-//             setIsOtpVerified(true);
-//             setError('');
-//         } catch (error) {
-//             setError(error.response?.data?.message || 'Error verifying OTP');
-//             setMessage('');
-//         }
-//     };
-
-//     // Function to handle password reset
-//     const handleResetPassword = async () => {
-//         // Check if passwords match
-//         if (newPassword !== confirmPassword) {
-//             setError("Passwords do not match");
-//             return;
-//         }
-
-//         try {
-//             const response = await axios.post('http://localhost:5001/api/reset-password', { email, newPassword });
+    const navigate = useNavigate(); 
+    const handleSendOtp = async (e) => {
+        e.preventDefault();
+        try {
+            const res = await axios.post("http://localhost:5001/api/send-otp", { email });
+            const msg = res.data.message;
+            console.log("message : ", msg);
             
-//             // Check the response and set success message
-//             if (response.data.success) {  // Assuming the API response contains a success field
-//                 toast.success(response.data.message, { pauseOnHover: false });
-//                 setError('');
-//                 setNewPassword('');
-//                 setConfirmPassword('');
-//                 console.log("Password reset successful. Redirecting to login..."); // Debug line
-//                 history.push('/login'); // Redirect to login page after successful reset
-//             } else {
-//                 setError("Failed to reset password. Please try again."); // Handle unexpected response
-//             }
-//         } catch (error) {
-//             setError(error.response?.data?.message || 'Error resetting password');
-//             setMessage('');
-//         }
-//     };
+            if(msg === "OTP sent successfully!") {
+                toast.success(msg, { pauseOnHover: false });
+                setIsOtpSent(true);
+            } else toast.error(msg, { pauseOnHover: false });
+        } catch (error) {
+            toast.error(error.response.data.message, { pauseOnHover: false });
+        }
+    };
+    
+    const handleVerifyOtp = async (e) => {
+        e.preventDefault();        
+        
+        try {
+            const res = await axios.post("http://localhost:5001/api/verify-otp", { email, otp});
+            const msg = res.data.message;
+            if(msg === 'OTP verified successfully!') {
+                toast.success(msg, { pauseOnHover: false });
+                setIsOtpVerified(true);
+            } else toast.error(msg, {pauseOnHover: false});
+        } catch (error) {
+            toast.error(error.response.data.message, { pauseOnHover: false });
+        }
+    };
+    
+    const handleResetPassword = async (e) => {
+        e.preventDefault();
+        
+        if (newPassword !== confirmPassword) {
+            toast.error("Passwords mismatch!", { pauseOnHover: false });
+            return;
+        }
 
-//     return (
-//         <div>
-//             {/* Step 1: Enter Email and Send OTP */}
-//             {step === 1 && (
-//                 <div>
-//                     <input
-//                         type="email"
-//                         className="form-control mb-3"
-//                         placeholder="Enter your email"
-//                         value={email}
-//                         onChange={(e) => setEmail(e.target.value)}
-//                         required
-//                     />
-//                     <Button variant="success" onClick={handleSendOtp} className="w-100">Send OTP</Button>
-//                 </div>
-//             )}
+        try {
+            const res = await axios.post("http://localhost:5001/api/reset-password", { email, newPassword });
+            const msg = res.data.message;            
+            if(msg === 'Password changed successfully!') {
+                toast.success(msg, { pauseOnHover: false });
+                // Directly navigate to the login page after successful reset
+                navigate("/login");
+            } else toast.error(msg, { pauseOnHover: false });
 
-//             {/* Step 2: Verify OTP */}
-//             {step === 2 && !isOtpVerified && (
-//                 <div>
-//                     <input
-//                         type="text"
-//                         className="form-control mb-3"
-//                         placeholder="Enter the OTP sent to your email"
-//                         value={otp}
-//                         onChange={(e) => setOtp(e.target.value)}
-//                         required
-//                     />
-//                     <Button variant="success" onClick={handleVerifyOtp} className="w-100">Verify OTP</Button>
-//                 </div>
-//             )}
+        } catch (error) {
+            toast.error(error.response.data.message, { pauseOnHover: false });
+        }
+  };
+    
+  return (
+    <div
+    className="min-vh-100 d-flex justify-content-center align-items-center"
+      style={{ backgroundSize: "cover", backgroundPosition: "center" }}
+    >
+        <div
+        className="bg-white p-4 rounded shadow"
+        style={{
+          maxWidth: "400px",
+          width: "100%",
+          border: "1px solid #dcdcdc",
+          opacity: 0.9,
+        }}
+        >
+            {/* Enter OTP section */
+                <>
+                <div className="mb-3 position-relative">
+                    <FontAwesomeIcon
+                        icon={faEnvelope}
+                        className="position-absolute"
+                        style={{ top: "12px", left: "12px", color: "#7f8c8d" }}
+                    />
+                    <input
+                        type="email"
+                        className="form-control ps-5"
+                        value={email}
+                        onChange={(e) => setEmail(e.target.value)}
+                        placeholder="Email"
+                        required
+                        style={{ borderColor: "#7f8c8d", fontSize: "16px" }}
+                    />
+                </div>
+                <button
+                type="submit"
+                className="btn btn-success w-100 mb-3"
+                style={{ fontWeight: "bold", fontSize: "16px" }}
+                onClick={handleSendOtp}
+                >
+                Send OTP
+                </button>
+                </>  
+            }
 
-//             {/* Step 2: Reset Password */}
-//             {step === 2 && isOtpVerified && (
-//                 <div>
-//                     <input
-//                         type="password"
-//                         className="form-control mb-3"
-//                         placeholder="Enter new password"
-//                         value={newPassword}
-//                         onChange={(e) => setNewPassword(e.target.value)}
-//                         required
-//                     />
-//                     <input
-//                         type="password"
-//                         className="form-control mb-3"
-//                         placeholder="Confirm new password"
-//                         value={confirmPassword}
-//                         onChange={(e) => setConfirmPassword(e.target.value)}
-//                         required
-//                     />
-//                     <Button variant="success" onClick={handleResetPassword} className="w-100">Reset Password</Button>
-//                 </div>
-//             )}
+            {/* Send OTP section */
+            isOtpSent &&
+                (<>
+                    <div className="mb-3 position-relative">
+                        <input
+                        type="text"
+                        className="form-control"
+                        value={otp}
+                        onChange={(e) => setOtp(e.target.value)}
+                        placeholder="Enter OTP"
+                        required
+                        style={{ borderColor: "#7f8c8d", fontSize: "16px" }}
+                        />
+                    </div>
+                    <button
+                        type="submit"
+                        className="btn btn-success w-100"
+                        style={{ fontWeight: "bold", fontSize: "16px" }}
+                        onClick={handleVerifyOtp}
+                        >
+                        Verify OTP
+                    </button>
+                </>)
+            }
+            
+            {/* Password reset form */
+            isOtpVerified &&
+                (<>
+                <div className="mt-3 position-relative">
+                {/* <FontAwesomeIcon
+                    className="position-absolute"
+                    style={{ top: "12px", left: "12px", color: "#7f8c8d" }}
+                /> */}
+                <input
+                    type="password"
+                    className="form-control mb-3"
+                    value={newPassword}
+                    onChange={(e) => setNewPassword(e.target.value)}
+                    placeholder="New Password"
+                    required
+                    style={{ borderColor: "#7f8c8d", fontSize: "16px" }}
+                />
+                <input
+                    type="password"
+                    className="form-control mb-3"
+                    value={confirmPassword}
+                    onChange={(e) => setConfirmPassword(e.target.value)}
+                    placeholder="Confirm Password"
+                    required
+                    style={{ borderColor: "#7f8c8d", fontSize: "16px" }}
+                />
+                </div>
+                <button
+                type="button"
+                className="btn btn-success w-100"
+                onClick={handleResetPassword}
+                style={{ fontWeight: "bold", fontSize: "16px" }}
+                >
+                Reset Password
+                </button>
+                </>)
+            }
+        </div>
+    </div>
+  )
+}
 
-//             {/* Error and Success Messages */}
-//             {error && <p style={{ color: 'red' }}>{error}</p>}
-//             {message && <p style={{ color: 'green' }}>{message}</p>}
-//         </div>
-//     );
-// };
-
-// export default PasswordReset;
+export default ForgotPassword
