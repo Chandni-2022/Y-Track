@@ -5,8 +5,8 @@ const UserSchema = new mongoose.Schema({
   email: { type: String, required: true, unique: true },
   password: { type: String, required: true },
   role: { type: String, required: true },
-  otp: { type: Number }, // Add OTP field
-  otpExpires: { type: Date }, // Add OTP expiration field
+  otp: { type: Number }, 
+  otpExpires: { type: Date },
 }, { timestamps: true });
 
 const User = mongoose.model("User", UserSchema);
