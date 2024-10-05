@@ -21,7 +21,7 @@ const CreateProject = () => {
   const [successMessage, setSuccessMessage] = useState('');
   const [loading, setLoading] = useState(false);
 
-  // Form submission for Project Details
+
   const handleCreateProjectSubmit = (event) => {
     event.preventDefault();
     setErrorMessage('');
@@ -32,23 +32,19 @@ const CreateProject = () => {
       return;
     }
     
-    // Move to Step 2: Invite team members
     setStep(2);
   };
 
-  // Add Team Member Input dynamically
   const addTeamMember = () => {
     setTeamMembers([...teamMembers, '']);
   };
 
-  // Handle email input changes
   const handleTeamMemberChange = (index, value) => {
     const updatedTeamMembers = [...teamMembers];
     updatedTeamMembers[index] = value;
     setTeamMembers(updatedTeamMembers);
   };
 
-  // Validate email addresses
   const validateEmails = () => {
     for (let email of teamMembers) {
       if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
@@ -58,37 +54,11 @@ const CreateProject = () => {
     return true;
   };
 
-  // Submit team invitations
   const handleTeamSubmit = async (event) => {
     event.preventDefault();
     setErrorMessage('');
     setSuccessMessage('');
-
-    if (!validateEmails()) {
-      setErrorMessage('Invalid email addresses.');
-      return;
-    }
-
-    setLoading(true);
-    try {
-      // Post the project data including status and priority
-      const response = await axios.post('http://localhost:5500/api/projects', {
-        name: projectName,
-        description: projectDescription,
-        startDate,
-        endDate,
-        status,
-        priority,
-        
-      });
-
-      if (response.status === 201) {
-        const projectId = response.data._id; // Assuming project ID is returned
-        // Send team member invitations
-        await axios.post(`http://localhost:5500/api/projects/${projectId}/invite`, { teamMembers });
-
-        setSuccessMessage('Project created and team members invited successfully!');
-        // Reset forms after success
+     function reset() {
         setProjectName('');
         setProjectDescription('');
         setStartDate(new Date());
@@ -97,6 +67,28 @@ const CreateProject = () => {
         setPriority('Low');
         setTeamMembers(['']);
         setStep(1); // Reset to Step 1
+    }
+
+    if (!validateEmails()) {
+      setErrorMessage('Invalid email addresses.');
+      return;
+    }
+    setLoading(true);
+    
+    try {
+      const response = await axios.post('http://localhost:5001/api/projects/create-project', {
+        name: projectName,
+        description: projectDescription,
+        startDate,
+        endDate,
+        status,
+        priority,
+        teamMembers
+      });
+
+      if (response.status === 201) {
+        setSuccessMessage('Project created successfully!');
+        reset();
       }
     } catch (error) {
       setErrorMessage('Error creating project or inviting team members. Please try again.');
@@ -108,6 +100,8 @@ const CreateProject = () => {
 
   return (
     <Container className="mt-4 p-5 border rounded shadow bg-light" style={{ maxWidth: '600px' }}>
+      
+      {/* Heading */}
       <h2 className="text-center mb-4">
         {step === 1 ? 'Create New Project' : 'Invite Team Members'}
       </h2>
@@ -118,6 +112,7 @@ const CreateProject = () => {
           {errorMessage}
         </Alert>
       )}
+
       {successMessage && (
         <Alert variant="success" className="d-flex align-items-center">
           <FaCheckCircle className="me-2" />
@@ -125,7 +120,8 @@ const CreateProject = () => {
         </Alert>
       )}
 
-      {step === 1 ? (
+      {step === 1 ? 
+      (
         <Form onSubmit={handleCreateProjectSubmit}>
           <Row>
             <Col md={12} className="mb-3">
@@ -224,7 +220,9 @@ const CreateProject = () => {
            Invite Team Members
           </Button>
         </Form>
-      ) : (
+      ) 
+      : 
+      (
         <Form onSubmit={handleTeamSubmit}>
           <Row>
             {teamMembers.map((email, index) => (
@@ -261,7 +259,8 @@ const CreateProject = () => {
             {loading ? 'Inviting...' : 'Send Invitations & Create Project'}
           </Button>
         </Form>
-      )}
+      )
+      }
     </Container>
   );
 };
