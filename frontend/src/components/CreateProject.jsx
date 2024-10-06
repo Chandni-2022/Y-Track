@@ -1,12 +1,10 @@
-
-
-
 import React, { useState } from 'react';
 import { Button, Form, Alert, Container, Row, Col } from 'react-bootstrap';
 import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
 import axios from 'axios';
 import { FaCheckCircle, FaExclamationCircle } from 'react-icons/fa';
+
 
 const CreateProject = () => {
   const [projectName, setProjectName] = useState('');
@@ -39,6 +37,11 @@ const CreateProject = () => {
     setTeamMembers([...teamMembers, '']);
   };
 
+  const removeTeamMember = (index) => {
+    const updatedTeamMembers = teamMembers.filter((_, idx) => idx !== index);
+    setTeamMembers(updatedTeamMembers);
+};
+
   const handleTeamMemberChange = (index, value) => {
     const updatedTeamMembers = [...teamMembers];
     updatedTeamMembers[index] = value;
@@ -53,6 +56,9 @@ const CreateProject = () => {
     }
     return true;
   };
+
+ 
+
 
   const handleTeamSubmit = async (event) => {
     event.preventDefault();
@@ -90,9 +96,14 @@ const CreateProject = () => {
         setSuccessMessage('Project created successfully!');
         reset();
       }
+      else if(response.data.invalidUsersExist) {
+        const invalidUserEmails = response.data.message.join(", ")
+        setErrorMessage(`Invalid users :
+          ${invalidUserEmails}`)
+      }
     } catch (error) {
       setErrorMessage('Error creating project or inviting team members. Please try again.');
-      console.error(error);
+      console.log(error.message);
     } finally {
       setLoading(false);
     }
@@ -123,6 +134,7 @@ const CreateProject = () => {
       {step === 1 ? 
       (
         <Form onSubmit={handleCreateProjectSubmit}>
+          
           <Row>
             <Col md={12} className="mb-3">
               <Form.Group controlId="projectName">
@@ -138,6 +150,7 @@ const CreateProject = () => {
               </Form.Group>
             </Col>
           </Row>
+
           <Row>
             <Col md={12} className="mb-3">
               <Form.Group controlId="projectDescription">
@@ -153,6 +166,7 @@ const CreateProject = () => {
               </Form.Group>
             </Col>
           </Row>
+
           <Row>
             <Col md={6} className="mb-3">
               <Form.Group controlId="projectStartDate">
@@ -179,6 +193,7 @@ const CreateProject = () => {
               </Form.Group>
             </Col>
           </Row>
+
           <Row>
             <Col md={6} className="mb-3">
               <Form.Group controlId="projectStatus">
@@ -211,6 +226,7 @@ const CreateProject = () => {
               </Form.Group>
             </Col>
           </Row>
+
           <Button
             variant="success"
             type="submit"
@@ -219,6 +235,7 @@ const CreateProject = () => {
           >
            Invite Team Members
           </Button>
+
         </Form>
       ) 
       : 
@@ -226,21 +243,30 @@ const CreateProject = () => {
         <Form onSubmit={handleTeamSubmit}>
           <Row>
             {teamMembers.map((email, index) => (
-              <Col md={12} className="mb-3" key={index}>
-                <Form.Group controlId={`teamMember-${index}`}>
-                  <Form.Label>{index + 1} Team Member Email</Form.Label>
-                  <Form.Control
-                    type="email"
-                    placeholder="Enter team member email"
-                    value={email}
-                    onChange={(e) => handleTeamMemberChange(index, e.target.value)}
-                    required
-                    style={{ borderRadius: '0.5rem', borderColor: '#28a745' }}
-                  />
-                </Form.Group>
-              </Col>
+            <Col md={12} className="mb-3" key={index}>
+              <Form.Group controlId={`teamMember-${index}`}>
+                <Form.Label>{index + 1} Team Member Email</Form.Label>
+                <Form.Control
+                  type="email"
+                  placeholder="Enter team member email"
+                  value={email}
+                  onChange={(e) => handleTeamMemberChange(index, e.target.value)}
+                  required
+                  style={{ borderRadius: '0.5rem', borderColor: '#28a745' }}
+                />
+                <Button
+                  variant="danger"
+                  onClick={() => removeTeamMember(index)}
+                  className="mt-2"
+                  style={{ borderRadius: '0.5rem' }}
+                >
+                  Remove
+                </Button>
+              </Form.Group>
+            </Col>
             ))}
           </Row>
+
           <Button
             variant="primary"
             onClick={addTeamMember}
@@ -249,6 +275,7 @@ const CreateProject = () => {
           >
             Add Another Member
           </Button>
+          
           <Button
             variant="success"
             type="submit"
@@ -266,179 +293,3 @@ const CreateProject = () => {
 };
 
 export default CreateProject;
-
-
-
-
-
-
-
-
-
-
-
-
-// import React, { useState } from 'react';
-// import { Button, Form, Alert, Container, Row, Col } from 'react-bootstrap';
-// import DatePicker from 'react-datepicker';
-// import 'react-datepicker/dist/react-datepicker.css';
-// import axios from 'axios';
-// import { FaCheckCircle, FaExclamationCircle } from 'react-icons/fa';
-
-// const CreateProject = () => {
-//   const [projectName, setProjectName] = useState('');
-//   const [projectDescription, setProjectDescription] = useState('');
-//   const [startDate, setStartDate] = useState(new Date());
-//   const [endDate, setEndDate] = useState(new Date());
-//   const [status, setStatus] = useState('Not Started');
-//   const [priority, setPriority] = useState('Low');
-//   const [emails, setEmails] = useState(''); // New state for emails
-//   const [errorMessage, setErrorMessage] = useState('');
-//   const [successMessage, setSuccessMessage] = useState('');
-//   const [loading, setLoading] = useState(false);
-
-//   const handleCreateProjectSubmit = async (event) => {
-//       event.preventDefault();
-//       setErrorMessage('');
-//       setSuccessMessage('');
-//       setLoading(true);
-
-//       // Validate form fields
-//       if (!projectName || !projectDescription) {
-//           setErrorMessage('Project name and description are required.');
-//           setLoading(false);
-//           return;
-//       }
-
-//       try {
-//           const response = await axios.post('http://localhost:5500/api/projects', {
-//               name: projectName,
-//               description: projectDescription,
-//               startDate,
-//               endDate,
-//               status,
-//               priority,
-//               emails: emails.split(',').map(email => email.trim()) // Split email addresses by commas
-//           });
-
-//           if (response.status === 201) {
-//               setSuccessMessage('Project created successfully! Invitations sent to team members.');
-//               // Reset form fields
-//               setProjectName('');
-//               setProjectDescription('');
-//               setStartDate(new Date());
-//               setEndDate(new Date());
-//               setStatus('Not Started');
-//               setPriority('Low');
-//               setEmails(''); // Reset emails
-//           }
-//       } catch (error) {
-//           setErrorMessage('Error creating project. Please try again.');
-//           console.error(error);
-//       } finally {
-//           setLoading(false);
-//       }
-//   };
-
-//   return (
-//       <Container className="mt-4 p-5 border rounded shadow bg-light" style={{ maxWidth: '600px' }}>
-//           <h2 className="text-center mb-4">Create New Project</h2>
-//           {errorMessage && (
-//               <Alert variant="danger" className="d-flex align-items-center">
-//                   <FaExclamationCircle className="me-2" />
-//                   {errorMessage}
-//               </Alert>
-//           )}
-//           {successMessage && (
-//               <Alert variant="success" className="d-flex align-items-center">
-//                   <FaCheckCircle className="me-2" />
-//                   {successMessage}
-//               </Alert>
-//           )}
-
-//           <Form onSubmit={handleCreateProjectSubmit}>
-//               <Row>
-//                   <Col md={12} className="mb-3">
-//                       <Form.Group controlId="projectName">
-//                           <Form.Label>Project Name</Form.Label>
-//                           <Form.Control
-//                               type="text"
-//                               value={projectName}
-//                               onChange={(e) => setProjectName(e.target.value)}
-//                               required
-//                           />
-//                       </Form.Group>
-//                   </Col>
-//                   <Col md={12} className="mb-3">
-//                       <Form.Group controlId="projectDescription">
-//                           <Form.Label>Project Description</Form.Label>
-//                           <Form.Control
-//                               as="textarea"
-//                               rows={3}
-//                               value={projectDescription}
-//                               onChange={(e) => setProjectDescription(e.target.value)}
-//                               required
-//                           />
-//                       </Form.Group>
-//                   </Col>
-//                   <Col md={6} className="mb-3">
-//                       <Form.Group controlId="startDate">
-//                           <Form.Label>Start Date</Form.Label>
-//                           <DatePicker
-//                               selected={startDate}
-//                               onChange={(date) => setStartDate(date)}
-//                               className="form-control"
-//                           />
-//                       </Form.Group>
-//                   </Col>
-//                   <Col md={6} className="mb-3">
-//                       <Form.Group controlId="endDate">
-//                           <Form.Label>End Date</Form.Label>
-//                           <DatePicker
-//                               selected={endDate}
-//                               onChange={(date) => setEndDate(date)}
-//                               className="form-control"
-//                           />
-//                       </Form.Group>
-//                   </Col>
-//                   <Col md={6} className="mb-3">
-//                       <Form.Group controlId="status">
-//                           <Form.Label>Status</Form.Label>
-//                           <Form.Select value={status} onChange={(e) => setStatus(e.target.value)}>
-//                               <option>Not Started</option>
-//                               <option>In Progress</option>
-//                               <option>Completed</option>
-//                           </Form.Select>
-//                       </Form.Group>
-//                   </Col>
-//                   <Col md={6} className="mb-3">
-//                       <Form.Group controlId="priority">
-//                           <Form.Label>Priority</Form.Label>
-//                           <Form.Select value={priority} onChange={(e) => setPriority(e.target.value)}>
-//                               <option>Low</option>
-//                               <option>Medium</option>
-//                               <option>High</option>
-//                           </Form.Select>
-//                       </Form.Group>
-//                   </Col>
-//                   <Col md={12} className="mb-3">
-//                       <Form.Group controlId="emails">
-//                           <Form.Label>Team Member Emails (comma-separated)</Form.Label>
-//                           <Form.Control
-//                               type="text"
-//                               value={emails}
-//                               onChange={(e) => setEmails(e.target.value)}
-//                               placeholder="Enter emails separated by commas"
-//                           />
-//                       </Form.Group>
-//                   </Col>
-//               </Row>
-//               <Button type="submit" variant="primary" disabled={loading}>
-//                   {loading ? 'Creating...' : 'Create Project'}
-//               </Button>
-//           </Form>
-//       </Container>
-//   );
-// };
-
-// export default CreateProject;
