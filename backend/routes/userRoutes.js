@@ -2,6 +2,7 @@ const express = require('express');
 const registerUser = require('../controllers/signUpController');
 const authUser = require('../controllers/loginController');
 const { sendOtp, verifyOtp, resetPassword } = require('../controllers/otpController'); 
+
 // const { createProject, inviteMembers } = require('../controllers/projectController'); // Adjust the path based on your structure
 const router = express.Router();
 
