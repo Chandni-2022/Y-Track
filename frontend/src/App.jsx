@@ -8,6 +8,9 @@ import Login from "./components/Login.jsx"
 import ForgotPassword from "./components/ForgotPassword.jsx";
 import Dashboard from "./components/Dashboard.jsx";
 import CreateProject from "./components/CreateProject.jsx";
+import PlusButton from './components/PlusButton';
+
+
 
 
 const App = () => {
@@ -19,6 +22,7 @@ const App = () => {
             <Route path="/forgot-password" element={ <ForgotPassword /> }/>
             <Route path="/dashboard" element={ <Dashboard /> }/>
             <Route path="/create-project" element={ <CreateProject /> }/>
+            <Route path="/plus-btn" element={<PlusButton />} /> 
 
           </Routes>
     </BrowserRouter >
