@@ -5,6 +5,7 @@ import 'react-datepicker/dist/react-datepicker.css';
 import axios from 'axios';
 import { FaCheckCircle, FaExclamationCircle } from 'react-icons/fa';
 
+
 const CreateProject = () => {
   const [projectName, setProjectName] = useState('');
   const [projectDescription, setProjectDescription] = useState('');
@@ -36,6 +37,11 @@ const CreateProject = () => {
     setTeamMembers([...teamMembers, '']);
   };
 
+  const removeTeamMember = (index) => {
+    const updatedTeamMembers = teamMembers.filter((_, idx) => idx !== index);
+    setTeamMembers(updatedTeamMembers);
+};
+
   const handleTeamMemberChange = (index, value) => {
     const updatedTeamMembers = [...teamMembers];
     updatedTeamMembers[index] = value;
@@ -50,6 +56,9 @@ const CreateProject = () => {
     }
     return true;
   };
+
+ 
+
 
   const handleTeamSubmit = async (event) => {
     event.preventDefault();
@@ -87,9 +96,14 @@ const CreateProject = () => {
         setSuccessMessage('Project created successfully!');
         reset();
       }
+      else if(response.data.invalidUsersExist) {
+        const invalidUserEmails = response.data.message.join(", ")
+        setErrorMessage(`Invalid users :
+          ${invalidUserEmails}`)
+      }
     } catch (error) {
       setErrorMessage('Error creating project or inviting team members. Please try again.');
-      console.error(error);
+      console.log(error.message);
     } finally {
       setLoading(false);
     }
@@ -120,6 +134,7 @@ const CreateProject = () => {
       {step === 1 ? 
       (
         <Form onSubmit={handleCreateProjectSubmit}>
+          
           <Row>
             <Col md={12} className="mb-3">
               <Form.Group controlId="projectName">
@@ -135,6 +150,7 @@ const CreateProject = () => {
               </Form.Group>
             </Col>
           </Row>
+
           <Row>
             <Col md={12} className="mb-3">
               <Form.Group controlId="projectDescription">
@@ -150,6 +166,7 @@ const CreateProject = () => {
               </Form.Group>
             </Col>
           </Row>
+
           <Row>
             <Col md={6} className="mb-3">
               <Form.Group controlId="projectStartDate">
@@ -176,6 +193,7 @@ const CreateProject = () => {
               </Form.Group>
             </Col>
           </Row>
+
           <Row>
             <Col md={6} className="mb-3">
               <Form.Group controlId="projectStatus">
@@ -208,6 +226,7 @@ const CreateProject = () => {
               </Form.Group>
             </Col>
           </Row>
+
           <Button
             variant="success"
             type="submit"
@@ -216,6 +235,7 @@ const CreateProject = () => {
           >
            Invite Team Members
           </Button>
+
         </Form>
       ) 
       : 
@@ -223,21 +243,30 @@ const CreateProject = () => {
         <Form onSubmit={handleTeamSubmit}>
           <Row>
             {teamMembers.map((email, index) => (
-              <Col md={12} className="mb-3" key={index}>
-                <Form.Group controlId={`teamMember-${index}`}>
-                  <Form.Label>{index + 1} Team Member Email</Form.Label>
-                  <Form.Control
-                    type="email"
-                    placeholder="Enter team member email"
-                    value={email}
-                    onChange={(e) => handleTeamMemberChange(index, e.target.value)}
-                    required
-                    style={{ borderRadius: '0.5rem', borderColor: '#28a745' }}
-                  />
-                </Form.Group>
-              </Col>
+            <Col md={12} className="mb-3" key={index}>
+              <Form.Group controlId={`teamMember-${index}`}>
+                <Form.Label>{index + 1} Team Member Email</Form.Label>
+                <Form.Control
+                  type="email"
+                  placeholder="Enter team member email"
+                  value={email}
+                  onChange={(e) => handleTeamMemberChange(index, e.target.value)}
+                  required
+                  style={{ borderRadius: '0.5rem', borderColor: '#28a745' }}
+                />
+                <Button
+                  variant="danger"
+                  onClick={() => removeTeamMember(index)}
+                  className="mt-2"
+                  style={{ borderRadius: '0.5rem' }}
+                >
+                  Remove
+                </Button>
+              </Form.Group>
+            </Col>
             ))}
           </Row>
+
           <Button
             variant="primary"
             onClick={addTeamMember}
@@ -246,6 +275,7 @@ const CreateProject = () => {
           >
             Add Another Member
           </Button>
+          
           <Button
             variant="success"
             type="submit"
@@ -262,4 +292,8 @@ const CreateProject = () => {
   );
 };
 
+ dev-chand
 export default CreateProject;
+
+export default CreateProject;
+main
