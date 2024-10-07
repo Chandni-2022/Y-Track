@@ -39,12 +39,15 @@ const Dashbord = () => {
             </ul>
           </div>
         </div>
-      </header>
-
-      <div style={{ display: 'flex', flex: '1', marginTop: '56px' }}>
+      </header>  
+      <div style={{ display: 'flex', flex: '1', paddingTop: '56px' }}>
         <nav
           className="col-md-3 col-lg-2 d-md-block bg-light sidebar p-3"
-          style={{ height: '100%', overflowY: 'auto' }}
+          style={{
+            height: 'calc(100vh - 116px)', 
+            position: 'fixed', 
+            overflowY: 'auto',
+          }}
         >
           <ul className="nav flex-column">
             <li className="nav-item">
@@ -104,17 +107,51 @@ const Dashbord = () => {
             </li>
             <li className="nav-item">
               <a className="nav-link text-dark" href="#">
-                <i className="bi bi-camera-video me-3"></i> Zoom Meeting
+                <i className="bi bi-bar-chart-line me-3"></i> Reports
               </a>
             </li>
-            {/* Repeat as necessary for additional items */}
+            <li className="nav-item">
+              <a className="nav-link text-dark" href="#">
+                <i className="bi bi-gear me-3"></i> Settings
+              </a>
+            </li>
+            <li className="nav-item">
+              <a className="nav-link text-dark" href="#">
+                <i className="bi bi-question-circle me-3"></i> Help
+              </a>
+            </li>
+            <li className="nav-item">
+              <a className="nav-link text-dark" href="#">
+                <i className="bi bi-chat-square-text me-3"></i> Feedback
+              </a>
+            </li>
+            <li className="nav-item">
+              <a className="nav-link text-dark" href="#">
+                <i className="bi bi-megaphone me-3"></i> Announcements
+              </a>
+            </li>
+            <li className="nav-item">
+              <a className="nav-link text-dark" href="#">
+                <i className="bi bi-plug me-3"></i> Integrations
+              </a>
+            </li>
+            <li className="nav-item">
+              <a className="nav-link text-dark" href="#">
+                <i className="bi bi-book me-3"></i> User Guide
+              </a>
+            </li>
           </ul>
         </nav>
-
-        {/* Main Content */}
-        
+        <main
+          style={{ flex: '1', marginLeft: '250px',  overflowY: 'auto',height:'calc(100vh - 116px)',  padding: '20px', position: 'fixed', width: 'calc(100% - 250px)',
+          }}
+        >
+          <h1>Main Content</h1>
+          <div style={{ height: '1500px' }}>
+            <p>More content goes here...</p>
+          </div>
+        </main>
       </div>
-
       <footer className="footer mt-auto py-3 bg-success text-white text-center fixed-bottom">
         <div className="container">
           <span>© 2024 Project Management Tool. All Rights Reserved.</span>
@@ -124,10 +161,6 @@ const Dashbord = () => {
           </div>
         </div>
       </footer>
-
-      <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-      <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
-
       <style>
         {`
           .nav-link {
@@ -150,6 +183,34 @@ const Dashbord = () => {
           }
           .nav-link i {
             margin-right: 10px;
+          }
+          .sidebar {
+            scrollbar-width: thin;
+            scrollbar-color: #28a745 #f1f1f1;
+          }
+          .sidebar::-webkit-scrollbar {
+            width: 6px;
+          }
+          .sidebar::-webkit-scrollbar-thumb {
+            background-color: #28a745;
+            border-radius: 10px;
+          }
+          .sidebar::-webkit-scrollbar-track {
+            background: #f1f1f1;
+          }
+          main {
+            scrollbar-width: thin;
+            scrollbar-color: #28a745 #f1f1f1;
+          }
+          main::-webkit-scrollbar {
+            width: 6px;
+          }
+          main::-webkit-scrollbar-thumb {
+            background-color: #28a745;
+            border-radius: 10px;
+          }
+          main::-webkit-scrollbar-track {
+            background: #f1f1f1;
           }
         `}
       </style>
