@@ -1,4 +1,5 @@
 import React from "react";
+import './App.css';
 import "bootstrap/dist/css/bootstrap.min.css";
 import "react-toastify/dist/ReactToastify.css";
 import {BrowserRouter, Routes, Route} from 'react-router-dom'
@@ -13,6 +14,7 @@ import PlusButton from './components/PlusButton';
 
 
 
+
 const App = () => {
   return <BrowserRouter >
           <Routes>
@@ -23,6 +25,7 @@ const App = () => {
             <Route path="/dashboard" element={ <Dashboard /> }/>
             <Route path="/create-project" element={ <CreateProject /> }/>
             <Route path="/plus-btn" element={<PlusButton />} /> 
+            
 
           </Routes>
     </BrowserRouter >
