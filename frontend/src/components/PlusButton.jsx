@@ -8,7 +8,7 @@ const PlusButton = () => {
 
   // Route to your form page of create project
   const redirectToForm = () => {
-    navigate('/form'); 
+    navigate('/create-project'); 
   };
 
   return (
@@ -50,7 +50,7 @@ const PlusButton = () => {
           e.currentTarget.style.transform = 'scale(1.1)'; 
         }}
         onMouseLeave={(e) => {
-          e.currentTarget.style.transform = 'scale(1)'; leave
+          e.currentTarget.style.transform = 'scale(1)';
         }}
       >
         +
