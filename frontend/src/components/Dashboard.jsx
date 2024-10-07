@@ -4,11 +4,19 @@ import 'bootstrap-icons/font/bootstrap-icons.css';
 
 const Dashbord = () => {
   return (
-    <div>
+    <div style={{ display: 'flex', flexDirection: 'column', height: '100vh' }}>
       <header className="navbar navbar-expand-lg navbar-dark bg-success shadow fixed-top">
         <div className="container-fluid">
           <h4 className="navbar-brand fw-bold">Y-Track LOGO</h4>
-          <button className="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+          <button
+            className="navbar-toggler"
+            type="button"
+            data-bs-toggle="collapse"
+            data-bs-target="#navbarNav"
+            aria-controls="navbarNav"
+            aria-expanded="false"
+            aria-label="Toggle navigation"
+          >
             <span className="navbar-toggler-icon"></span>
           </button>
           <div className="collapse navbar-collapse" id="navbarNav">
@@ -33,11 +41,14 @@ const Dashbord = () => {
         </div>
       </header>
 
-      <div className="row" style={{ marginTop: '80px' }}>
-        <nav className="col-md-3 col-lg-2 d-md-block bg-light sidebar sidebar-sticky p-3" style={{ height: '100vh', overflowY: 'auto' }}>
+      <div style={{ display: 'flex', flex: '1', marginTop: '56px' }}>
+        <nav
+          className="col-md-3 col-lg-2 d-md-block bg-light sidebar p-3"
+          style={{ height: '100%', overflowY: 'auto' }}
+        >
           <ul className="nav flex-column">
             <li className="nav-item">
-              <a className="nav-link  text-dark fw-bold" href="#">
+              <a className="nav-link text-dark fw-bold" href="#">
                 <i className="bi bi-house-door me-3"></i> Dashboard
               </a>
             </li>
@@ -96,10 +107,12 @@ const Dashbord = () => {
                 <i className="bi bi-camera-video me-3"></i> Zoom Meeting
               </a>
             </li>
+            {/* Repeat as necessary for additional items */}
           </ul>
         </nav>
 
         {/* Main Content */}
+        
       </div>
 
       <footer className="footer mt-auto py-3 bg-success text-white text-center fixed-bottom">
