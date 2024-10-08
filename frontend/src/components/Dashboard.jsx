@@ -1,8 +1,16 @@
-import React from 'react';
+import React, { useState } from 'react';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import 'bootstrap-icons/font/bootstrap-icons.css';
+import PlusButton from './PlusButton'; 
 
 const Dashbord = () => {
+  const [showPlusButton, setShowPlusButton] = useState(false); 
+
+  
+  const handleProjectsClick = () => {
+    setShowPlusButton(true); 
+  };
+  
   return (
     <div style={{ display: 'flex', flexDirection: 'column', height: '100vh' }}>
       <header className="navbar navbar-expand-lg navbar-dark bg-success shadow fixed-top">
@@ -39,13 +47,13 @@ const Dashbord = () => {
             </ul>
           </div>
         </div>
-      </header>  
+      </header>
       <div style={{ display: 'flex', flex: '1', paddingTop: '56px' }}>
         <nav
           className="col-md-3 col-lg-2 d-md-block bg-light sidebar p-3"
           style={{
-            height: 'calc(100vh - 116px)', 
-            position: 'fixed', 
+            height: 'calc(100vh - 116px)',
+            position: 'fixed',
             overflowY: 'auto',
           }}
         >
@@ -56,15 +64,17 @@ const Dashbord = () => {
               </a>
             </li>
             <li className="nav-item">
-              <a className="nav-link text-dark" href="#">
-                <i className="bi bi-person-fill me-3"></i> Users
+              <a className="nav-link text-dark" href="#" onClick={handleProjectsClick}>
+                <i className="bi bi-file-earmark-text me-3"></i> Projects
               </a>
             </li>
             <li className="nav-item">
               <a className="nav-link text-dark" href="#">
-                <i className="bi bi-file-earmark-text me-3"></i> Projects
+                <i className="bi bi-person-fill me-3"></i> Users
               </a>
             </li>
+
+            {/* Other nav items */}
             <li className="nav-item">
               <a className="nav-link text-dark" href="#">
                 <i className="bi bi-check-square me-3"></i> Tasks
@@ -127,7 +137,7 @@ const Dashbord = () => {
             </li>
             <li className="nav-item">
               <a className="nav-link text-dark" href="#">
-                <i className="bi bi-megaphone me-3"></i> Announcements
+                <i className="bi bi-camera-video me-3"></i> Zoom Meeting
               </a>
             </li>
             <li className="nav-item">
@@ -143,13 +153,29 @@ const Dashbord = () => {
           </ul>
         </nav>
         <main
-          style={{ flex: '1', marginLeft: '250px',  overflowY: 'auto',height:'calc(100vh - 116px)',  padding: '20px', position: 'fixed', width: 'calc(100% - 250px)',
+          style={{
+            flex: '1',
+            marginLeft: '250px',
+            overflowY: 'auto',
+            height: 'calc(100vh - 116px)',
+            padding: '20px',
+            position: 'fixed',
+            width: 'calc(100% - 250px)',
           }}
         >
-          <h1>Main Content</h1>
-          <div style={{ height: '1500px' }}>
-            <p>More content goes here...</p>
-          </div>
+      
+          {showPlusButton ? (
+            <div style={{ position: 'absolute', top: '-300px', left: '20px' }}>
+              <PlusButton />
+            </div>
+          ) : (
+            <div>
+              <h1>Main Content</h1>
+              <div style={{ height: '1500px' }}>
+                <p>More content goes here...</p>
+              </div>
+            </div>
+          )}
         </main>
       </div>
       <footer className="footer mt-auto py-3 bg-success text-white text-center fixed-bottom">
@@ -196,20 +222,6 @@ const Dashbord = () => {
             border-radius: 10px;
           }
           .sidebar::-webkit-scrollbar-track {
-            background: #f1f1f1;
-          }
-          main {
-            scrollbar-width: thin;
-            scrollbar-color: #28a745 #f1f1f1;
-          }
-          main::-webkit-scrollbar {
-            width: 6px;
-          }
-          main::-webkit-scrollbar-thumb {
-            background-color: #28a745;
-            border-radius: 10px;
-          }
-          main::-webkit-scrollbar-track {
             background: #f1f1f1;
           }
         `}
